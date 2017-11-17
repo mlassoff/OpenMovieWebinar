@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+        <title>Movies</title>
+		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+		<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+		<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+		<style>
+			#container
+			{
+				margin: 5px;
+			}
+		</style>
+    </head>
+    <body>
+		<div id="container">
+		<form>
+			<label for="title">Movie Title</label>
+			<input type="text" id="title" />
+			<button id="btnSearch">Search</button>
+		</form>
+		<div id="movieTitle"></div>
+		<div id="year"></div>
+		<div id="rating"></div>
+		<div id="release"></div>
+		<div id="cast"></div>
+		<div id="plot"></div>
+		<div id="poster">
+			<img src="#" id="moviePoster"/>	
+		</div>
+		<script>
+			var xmlhttp;
+			document.getElementById('btnSearch').addEventListener('click', searchMovies);
+			
+			function searchMovies(e)
+			{
+				//http://www.omdbapi.com/?apikey=ec9fc50b&t=Avatar&plot=full
+				var title = document.getElementById('title').value;
+				var url = "http://www.omdbapi.com/?apikey=ec9fc50b&t=";
+				url += title;
+				url += "&plot=full";
+				console.log(url);
+				
+				xmlhttp = new XMLHttpRequest();
+				xmlhttp.onreadystatechange = getData;
+				xmlhttp.open("get", url, true);
+				xmlhttp.send();
+			}
+			
+			function getData()
+			{
+				if(xmlhttp.readyState==4 && xmlhttp.status == 200)
+					{
+					 	var response = JSON.parse(xmlhttp.responseText);
+						var title = response.Title;
+						var year = response.Year;
+						var rating = response.Rated;
+						var released = response.Released;
+						var cast = response.Actors;
+						var plot = response.Plot;
+						var posterURL = response.Poster;
+						document.getElementById('movieTitle').innerHTML = "<h1>" + title + "</h1>";
+						document.getElementById('year').innerHTML = "<p>" + year + "</p>";
+						
+						document.getElementById('rating').innerHTML = "<p>" + rating + "</p>";
+						
+						document.getElementById('release').innerHTML = "<p>" + released + "</p>";
+						
+						document.getElementById('cast').innerHTML = "<p>" + cast + "</p>";
+						
+						document.getElementById('plot').innerHTML = "<p>" + plot + "</p>";
+						
+						document.getElementById('moviePoster').src = posterURL;
+					}
+			}
+		</script>
+        <script type="text/javascript" src="cordova.js"></script>
+		</div> <!-- container -->
+    </body>
+</html>
